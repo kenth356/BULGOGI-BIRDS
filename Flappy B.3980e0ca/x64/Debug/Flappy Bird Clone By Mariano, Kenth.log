@@ -1,0 +1,33 @@
+﻿  Flop.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\xmemory(700,103): warning C4244: 'argument': conversion from '_Ty' to 'float', possible loss of data
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\xmemory(700,103): warning C4244:         with
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\xmemory(700,103): warning C4244:         [
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\xmemory(700,103): warning C4244:             _Ty=int
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\xmemory(700,103): warning C4244:         ]
+  (compiling source file 'Flop.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\xmemory(700,103):
+      the template instantiation context (the oldest one first) is
+          C:\Users\samon\source\repos\Flappy Bird Clone By Mariano, Kenth\Flop.cpp(286,12):
+          see reference to function template instantiation 'PIPES &std::vector<PIPES,std::allocator<PIPES>>::emplace_back<int,float&,sf::Texture&,sf::Texture&>(int &&,float &,sf::Texture &,sf::Texture &)' being compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\vector(858,24):
+          see reference to function template instantiation '_Ty &std::vector<_Ty,std::allocator<_Ty>>::_Emplace_one_at_back<int,float&,sf::Texture&,sf::Texture&>(int &&,float &,sf::Texture &,sf::Texture &)' being compiled
+          with
+          [
+              _Ty=PIPES
+          ]
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\vector(776,20):
+          see reference to function template instantiation '_Ty &std::vector<_Ty,std::allocator<_Ty>>::_Emplace_back_with_unused_capacity<int,float&,sf::Texture&,sf::Texture&>(int &&,float &,sf::Texture &,sf::Texture &)' being compiled
+          with
+          [
+              _Ty=PIPES
+          ]
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\include\vector(794,27):
+          see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,int,float&,sf::Texture&,sf::Texture&>(_Alloc &,_Objty *const ,int &&,float &,sf::Texture &,sf::Texture &)' being compiled
+          with
+          [
+              _Alloc=std::allocator<PIPES>,
+              _Ty=PIPES,
+              _Objty=PIPES
+          ]
+  
+  Flappy Bird Clone By Mariano, Kenth.vcxproj -> C:\Users\samon\source\repos\Flappy Bird Clone By Mariano, Kenth\x64\Debug\Flappy Bird Clone By Mariano, Kenth.exe
