@@ -146,7 +146,7 @@ int main() {
 	font.loadFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\PressStart2P-Regular.ttf");
 
 	// FOR LOADING THE BACKGROUND IMAGE
-	background_TEXT.loadFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\backgroundFINAL.jpg");
+	background_TEXT.loadFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\BACKGROUND.png");
 
 	// FOR SETTING THE TEXTURE ONTO THE SPRITES
 	background_SPRT.setTexture(background_TEXT);
@@ -178,23 +178,31 @@ int main() {
 	scoreTEXT.setFont(font);
 	scoreTEXT.setCharacterSize(40);
 	scoreTEXT.setFillColor(Color::White);
+	scoreTEXT.setOutlineColor(Color::Black);
+	scoreTEXT.setOutlineThickness(5);
 	scoreTEXT.setPosition(10, 10);
 	// FOR MENU
 	menuTEXT.setFont(font);
 	menuTEXT.setCharacterSize(40);
-	menuTEXT.setFillColor(Color::Black);
+	menuTEXT.setFillColor(Color::White);
+	menuTEXT.setOutlineColor(Color::Black);
+	menuTEXT.setOutlineThickness(5);
 	menuTEXT.setString("1. START\n\n2. SKINS\n\n3. EXIT");
 	menuTEXT.setPosition(238, 220);
 	// FOR SKIN SELECTION
 	skinselectTEXT.setFont(font);
 	skinselectTEXT.setCharacterSize(40);
 	skinselectTEXT.setFillColor(Color::White);
+	skinselectTEXT.setOutlineColor(Color::Black);
+	skinselectTEXT.setOutlineThickness(5);
 	skinselectTEXT.setString("SKIN SELECTION\n\n\n  1. Classic\n\n  2. Epic\n\n  3. Legend");
 	skinselectTEXT.setPosition(140, 130);
 	// FOR GAMEOVER TEXT
 	gameoverTEXT.setFont(font);
 	gameoverTEXT.setCharacterSize(40);
 	gameoverTEXT.setFillColor(Color::White);
+	gameoverTEXT.setOutlineColor(Color::Black);
+	gameoverTEXT.setOutlineThickness(5);
 	gameoverTEXT.setString("GAME OVER \n\n    ;(");
 	gameoverTEXT.setPosition(225, 250);
 	//FOR MENU-BOX
@@ -305,6 +313,12 @@ int main() {
 					gameOVER = true;
 				if (score >= 20)
 					pipeSPEED = 8.f;
+				if (score >= 35)
+					pipeSPEED = 9.5f;
+				if (score >= 50)
+					pipeSPEED = 12.f;
+				if (score >= 75)
+					pipeSPEED = 15.f;
 			}
 
 			scoreTEXT.setString("Score: " + to_string(score));
