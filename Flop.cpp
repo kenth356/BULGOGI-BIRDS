@@ -19,7 +19,7 @@ const float IG_pipe_gap = 200.f;
 const float IG_spawn_intv = 2.0f;
 
 // GAME VARIABLES
-enum GameVARS { GV_menu, GV_skinselect, GV_game, GV_pause };
+enum GameVARS { GV_menu, GV_skinselect, GV_game, GV_pause, GV_finish };
 GameVARS gamevars = GV_menu;
 
 // GAME BACKGROUND VIA IMAGE/SPRITES/TEXTURE
@@ -33,7 +33,7 @@ int currSKIN_INDEX = 0;
 // FOR FONTS
 Font font;
 
-// FOR CURRENT SCORING AND FINAL SCORE
+// FOR CURRENT SCORING/GAMEOVER FUNCTION/PIPE SPEED HANDLING
 int score = 0;
 bool gameOVER = false;
 float pipeSPEED = IG_pipe_speed;
@@ -173,7 +173,7 @@ int main() {
 	birdload.setTEXTURE(bird_SKINS[currSKIN_INDEX]);
 
 	// FOR IN GAME TEXTS (STRINGS) MANAGING
-	Text scoreTEXT, menuTEXT, skinselectTEXT, gameoverTEXT, pauseTEXT;
+	Text scoreTEXT, menuTEXT, skinselectTEXT, gameoverTEXT, pauseTEXT, finishTEXT;
 	// FOR SCORES
 	scoreTEXT.setFont(font);
 	scoreTEXT.setCharacterSize(40);
@@ -213,18 +213,32 @@ int main() {
 	pauseTEXT.setOutlineThickness(5);
 	pauseTEXT.setString("\n  GAME\n\n PAUSED");
 	pauseTEXT.setPosition(235, 225);
-	//FOR MENU-BOX
+	// FOR 1000TH SCORE TEXT
+	finishTEXT.setFont(font);
+	finishTEXT.setCharacterSize(40);
+	finishTEXT.setFillColor(Color::White);
+	finishTEXT.setOutlineColor(Color::Black);
+	finishTEXT.setOutlineThickness(5);
+	finishTEXT.setString("\n GGS :D");
+	finishTEXT.setPosition(225, 250);
+	// FOR MENU-UI-BOX
 	RectangleShape menuBOX(Vector2f(400, 250));
 	menuBOX.setFillColor(Color(255, 255, 255, 200));
 	menuBOX.setOutlineColor(Color::Black);
 	menuBOX.setOutlineThickness(3);
 	menuBOX.setPosition(200, 200);
-	//FOR PAUSE-UI-BOX
+	// FOR PAUSE-UI-BOX
 	RectangleShape pauseBOX(Vector2f(400, 250));
 	pauseBOX.setFillColor(Color(255, 255, 255, 200));
 	pauseBOX.setOutlineColor(Color::Black);
 	pauseBOX.setOutlineThickness(3);
 	pauseBOX.setPosition(200, 200);
+	// FOR 1000TH-UI-BOX
+	RectangleShape finishBOX(Vector2f(400, 250));
+	finishBOX.setFillColor(Color(255, 255, 255, 200));
+	finishBOX.setOutlineColor(Color::Black);
+	finishBOX.setOutlineThickness(3);
+	finishBOX.setPosition(200, 200);
 	// FOR IN GAME MECHANICS AND KEYS
 	Clock clock;
 	float timeLASTSPAWN = 0;
@@ -298,6 +312,19 @@ int main() {
 						clock.restart();
 					}
 				}
+				else if (gamevars == GV_finish) {
+					if (ev.key.code == Keyboard::M) {
+						gamevars = GV_menu;
+						birdload.bird_SPRT.setPosition(100, 600 / 2);
+						birdload.velocity = 0.f;
+						pipes.clear();
+						score = 0;
+						timeLASTSPAWN = 0.f;
+						gameOVER = false;
+						pipeSPEED = IG_pipe_speed;
+						clock.restart();
+					}
+				}
 				break;
 			}
 		}
@@ -329,6 +356,10 @@ int main() {
 					if (pipes[i].screenOFF()) {
 						pipes.erase(pipes.begin() + i);
 						score++;
+						if (score >= 1000) {
+							gamevars = GV_finish;
+							break;
+						}
 							--i;
 					}
 				}
@@ -348,6 +379,8 @@ int main() {
 					pipeSPEED = 12.f;
 				if (score >= 75)
 					pipeSPEED = 15.f;
+				if (score >= 1000)
+					gamevars = GV_finish;
 			}
 
 			scoreTEXT.setString("Score: " + to_string(score));
@@ -366,6 +399,11 @@ int main() {
 			window.draw(background_SPRT);
 			window.draw(pauseBOX);
 			window.draw(pauseTEXT);
+		}
+		else if (gamevars == GV_finish) {
+			window.draw(background_SPRT);
+			window.draw(finishBOX);
+			window.draw(finishTEXT);
 		}
 
 		window.display();
