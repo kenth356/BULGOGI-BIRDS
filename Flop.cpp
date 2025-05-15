@@ -52,12 +52,15 @@ public:
 
 	BIRD() {
 		velocity = 0;
+		// FOR FRAME ROTATION (ANIMATIONS)
+		bird_SPRT.setOrigin(bird_SPRT.getGlobalBounds().width / 2, bird_SPRT.getGlobalBounds().height / 2);
 	}
 
 	void setTEXTURE(const Texture& texture) {
 		bird_SPRT.setTexture(texture);
 		bird_SPRT.setScale(0.3f, 0.3f);
 		bird_SPRT.setPosition(100, 600 / 2);
+		bird_SPRT.setOrigin(bird_SPRT.getLocalBounds().width / 2, bird_SPRT.getLocalBounds().height / 2);
 	}
 
 	void birdFLAP() {
@@ -67,6 +70,13 @@ public:
 	void updateBIRD() {
 		velocity += IG_gravity;
 		bird_SPRT.move(0, velocity);
+
+		if (velocity < 0) {
+			bird_SPRT.setRotation(-20.f);
+		}
+		else {
+			bird_SPRT.setRotation(min(75.f, bird_SPRT.getRotation() + velocity * 0.3f));
+		}
 	}
 
 	FloatRect getBounds() const {
@@ -84,7 +94,7 @@ public:
 	PIPES(float x, float topHEIGHT, const Texture& textTOP, const Texture& textBOT) {
 		verticalOFFSET = 0.f;
 		moveUP = rand() % 2;
-		
+
 		TOP.setSize(Vector2f(IG_pipe_width, topHEIGHT));
 		TOP.setPosition(x, 0);
 		TOP.setTexture(&textTOP);
@@ -251,7 +261,7 @@ int main() {
 			case Event::Closed:
 				window.close();
 				break;
-			case Event::KeyPressed:	
+			case Event::KeyPressed:
 				if (gamevars == GV_menu) {
 					if (ev.key.code == Keyboard::Num1)
 						gamevars = GV_game;
@@ -360,7 +370,7 @@ int main() {
 							gamevars = GV_finish;
 							break;
 						}
-							--i;
+						--i;
 					}
 				}
 
@@ -407,7 +417,7 @@ int main() {
 		}
 
 		window.display();
-		
+
 	}
 
 	return 0;
