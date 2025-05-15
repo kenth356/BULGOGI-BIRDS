@@ -36,10 +36,15 @@ Font font;
 // FOR CURRENT SCORING/GAMEOVER FUNCTION/PIPE SPEED HANDLING
 int score = 0;
 bool gameOVER = false;
+bool knockedOUT = false;
 float pipeSPEED = IG_pipe_speed;
 
 // FOR BACKGROUND AUDIO (FADED BY ALAN WALKER)
 Music backgroundAUDIO;
+
+// FOR FLAPPING / KNOCK-OFF SOUNDS FX
+SoundBuffer flapFX, pointFX, knockedFX;
+Sound flapSOUNDS, pointSOUNDS, knockedSOUNDS;
 
 // FOR PIPE TEXTURES (TOP AND BOTTOM)
 Texture pipeTEXT_TOP, pipeTEXT_BOT;
@@ -58,7 +63,7 @@ public:
 
 	void setTEXTURE(const Texture& texture) {
 		bird_SPRT.setTexture(texture);
-		bird_SPRT.setScale(0.3f, 0.3f);
+		bird_SPRT.setScale(0.4f, 0.4f);
 		bird_SPRT.setPosition(100, 600 / 2);
 		bird_SPRT.setOrigin(bird_SPRT.getLocalBounds().width / 2, bird_SPRT.getLocalBounds().height / 2);
 	}
@@ -153,10 +158,10 @@ int main() {
 	Event ev;
 
 	// FOR LOADING THE FONT
-	font.loadFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\PressStart2P-Regular.ttf");
+	font.loadFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\FONT\\PressStart2P-Regular.ttf");
 
 	// FOR LOADING THE BACKGROUND IMAGE
-	background_TEXT.loadFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\BACKGROUND.png");
+	background_TEXT.loadFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\BACKGROUNDS\\BACKGROUND.png");
 
 	// FOR SETTING THE TEXTURE ONTO THE SPRITES
 	background_SPRT.setTexture(background_TEXT);
@@ -166,18 +171,30 @@ int main() {
 	);
 
 	// FOR LOADING THE SKINS FOR BIRDS VIA IMAGE/SPRITES/TEXTURES
-	bird_SKINS[0].loadFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\BIRD.png");
-	bird_SKINS[1].loadFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\BIRD2.png");
-	bird_SKINS[2].loadFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\BIRD3.png");
+	bird_SKINS[0].loadFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\SKINS\\BIRDS\\BIRD.png");
+	bird_SKINS[1].loadFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\SKINS\\BIRDS\\BIRD2.png");
+	bird_SKINS[2].loadFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\SKINS\\BIRDS\\NYANCAT.png");
 
 	// FOR LOADING THE PIPES' SPRITES/TEXTURES
-	pipeTEXT_TOP.loadFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\SPRITETOP.png");
-	pipeTEXT_BOT.loadFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\SPRITEBOT.png");
+	pipeTEXT_TOP.loadFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\SKINS\\PIPES\\SPRITETOP.png");
+	pipeTEXT_BOT.loadFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\SKINS\\PIPES\\SPRITEBOT.png");
 
 	// FOR LOADING THE BACKGROUND AUDIO (FADED BY ALAN WALKER)
-	backgroundAUDIO.openFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\faded.mp3");
+	backgroundAUDIO.openFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\AUDIO\\faded.mp3");
 	backgroundAUDIO.setLoop(true);
 	backgroundAUDIO.play();
+
+	// FOR LOADING THE FLAP FX
+	flapFX.loadFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\AUDIO\\FLAP.mp3");
+	flapSOUNDS.setBuffer(flapFX);
+
+	// FOR LOADING THE POINT-GAINED FX
+	pointFX.loadFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\AUDIO\\POINT.mp3");
+	pointSOUNDS.setBuffer(pointFX);
+
+	// FOR LOADING THE KNOCK FX WHEN HITTING THE PIPES
+	knockedFX.loadFromFile("C:\\Users\\samon\\source\\repos\\Flappy Bird Clone By Mariano, Kenth\\ASSETS\\AUDIO\\KNOCKED.mp3");
+	knockedSOUNDS.setBuffer(knockedFX);
 
 	BIRD birdload;
 	birdload.setTEXTURE(bird_SKINS[currSKIN_INDEX]);
@@ -281,8 +298,10 @@ int main() {
 					gamevars = GV_menu;
 				}
 				else if (gamevars == GV_game) {
-					if (!gameOVER && ev.key.code == Keyboard::Space)
+					if (!gameOVER && ev.key.code == Keyboard::Space) {
 						birdload.birdFLAP();
+						flapSOUNDS.play();
+					}
 					if (!gameOVER && ev.key.code == Keyboard::Escape)
 						gamevars = GV_pause;
 					if (gameOVER && ev.key.code == Keyboard::R) {
@@ -291,6 +310,7 @@ int main() {
 						pipes.clear();
 						score = 0;
 						timeLASTSPAWN = 0.f;
+						knockedOUT = false;
 						gameOVER = false;
 						pipeSPEED = IG_pipe_speed;
 						clock.restart();
@@ -301,6 +321,7 @@ int main() {
 						pipes.clear();
 						score = 0;
 						timeLASTSPAWN = 0.f;
+						knockedOUT = false;
 						gameOVER = false;
 						pipeSPEED = IG_pipe_speed;
 						clock.restart();
@@ -366,6 +387,7 @@ int main() {
 					if (pipes[i].screenOFF()) {
 						pipes.erase(pipes.begin() + i);
 						score++;
+						pointSOUNDS.play();
 						if (score >= 1000) {
 							gamevars = GV_finish;
 							break;
@@ -375,12 +397,22 @@ int main() {
 				}
 
 				for (const auto& pipe : pipes) {
-					if (birdload.getBounds().intersects(pipe.getTopBounds()) || birdload.getBounds().intersects(pipe.getBottomBounds()))
-						gameOVER = true;
+					if (birdload.getBounds().intersects(pipe.getTopBounds()) || birdload.getBounds().intersects(pipe.getBottomBounds())) {
+						if (!knockedOUT) {
+							knockedSOUNDS.play();
+							knockedOUT = true;
+							gameOVER = true;
+						}
+					}
 				}
 
-				if (birdload.bird_SPRT.getPosition().y < 0 || birdload.bird_SPRT.getPosition().y + birdload.bird_SPRT.getGlobalBounds().height > 600)
-					gameOVER = true;
+				if (birdload.bird_SPRT.getPosition().y < 0 || birdload.bird_SPRT.getPosition().y + birdload.bird_SPRT.getGlobalBounds().height > 600) {
+					if (!knockedOUT) {
+						knockedSOUNDS.play();
+						knockedOUT = true;
+						gameOVER = true;
+					}
+				}
 				if (score >= 20)
 					pipeSPEED = 8.f;
 				if (score >= 35)
@@ -402,7 +434,7 @@ int main() {
 			}
 
 			window.draw(scoreTEXT);
-			if (gameOVER)
+			if (gameOVER) 
 				window.draw(gameoverTEXT);
 		}
 		else if (gamevars == GV_pause) {
